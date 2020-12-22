@@ -1,9 +1,6 @@
 #include "route_planner.h"
 #include <algorithm>
 
-
-
-
 //RoutePlanner constructor - creates RoutePlanner object and sets its start and end node variables
 RoutePlanner::RoutePlanner(RouteModel &model, float start_x, float start_y, float end_x, float end_y): m_Model(model) {
     // Convert inputs to percentage:
@@ -14,8 +11,8 @@ RoutePlanner::RoutePlanner(RouteModel &model, float start_x, float start_y, floa
 
     // TODO 2: Use the m_Model.FindClosestNode method to find the closest nodes to the starting and ending coordinates.
     // Store the nodes you find in the RoutePlanner's start_node and end_node attributes.
-    start_node = &m_Model.FindClosestNode(start_x, start_y); // start_node is a pointer, so '&' needed to store memory address of result
-    end_node = &m_Model.FindClosestNode(end_x, end_y);
+    start_node = &(m_Model.FindClosestNode(start_x, start_y)); // start_node is a pointer, so '&' needed to store memory address of result
+    end_node = &(m_Model.FindClosestNode(end_x, end_y));
 
 }
 
@@ -39,18 +36,11 @@ float RoutePlanner::CalculateHValue(RouteModel::Node const *node) {
 // - For each node in current_node.neighbors, add the neighbor to open_list and set the node's visited attribute to true.
 
 void RoutePlanner::AddNeighbors(RouteModel::Node *current_node) {
-    //std::cout << "Welcome to AddNeighbors()" << std::endl;
     current_node->FindNeighbors();
-    //std::cout << current_node->neighbors.size() << " Neighbors have been found" << std::endl;
     for(auto current_neighbor : current_node->neighbors){
-    
-    //for(int i = 0; i = current_node->neighbors.size(); i++) { NOTE: I would love to know why this for loop didn't work!! The program didn't exit the loop
-        //std::cout << "In for loop of neighbors" << std::endl;
-        //auto current_neighbor = current_node->neighbors[i];
         current_neighbor->parent = current_node;
         current_neighbor->h_value = CalculateHValue(current_neighbor); 
-        current_neighbor->g_value = current_node->g_value + current_neighbor->distance(*current_node); //NOTE: current_node->distance(*current_neighbor) didn't work, please can you explain why?
-        //std::cout << "g_value " << current_neighbor->g_value << std::endl;
+        current_neighbor->g_value = current_node->g_value + current_neighbor->distance(*current_node); 
         open_list.push_back(current_neighbor);
         current_neighbor->visited = true;
     }
@@ -65,8 +55,8 @@ return;}
 // - Remove that node from the open_list.
 // - Return the pointer.
 bool Compare(RouteModel::Node *a, RouteModel::Node *b){
-    float f1 = a->h_value + a->g_value;
-    float f2 = b->h_value + b->g_value;
+    const float f1 = a->h_value + a->g_value;
+    const float f2 = b->h_value + b->g_value;
     return f1 > f2;
 }
 
