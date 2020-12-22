@@ -77,29 +77,22 @@ RouteModel::Node *RoutePlanner::NextNode() {
 //   of the vector, the end node should be the last element.
 
 std::vector<RouteModel::Node> RoutePlanner::ConstructFinalPath(RouteModel::Node *current_node) {
-    // Create path_found vector
-    //std::cout << "Reached ConstructFinalPath()" << std::endl;
     distance = 0.0f;
     std::vector<RouteModel::Node> path_found;
 
     // TODO: Implement your solution here.
     while(current_node != start_node) {
-        //std::cout << "In ConstructFinalPath() while loop" << std::endl;
         distance = distance + current_node->distance(*current_node->parent);
         path_found.insert(path_found.begin(), *current_node);
         current_node = current_node->parent;
 
     }
-    //std::cout << "Exited ConstructFinalPath() while loop" << std::endl;
 
     path_found.insert(path_found.begin(), *start_node);
 
-
     distance *= m_Model.MetricScale(); // Multiply the distance by the scale of the map to get meters.
     return path_found;
-
 }
-
 
 // TODO 7: Write the A* Search algorithm here.
 // Tips:
@@ -109,7 +102,6 @@ std::vector<RouteModel::Node> RoutePlanner::ConstructFinalPath(RouteModel::Node 
 // - Store the final path in the m_Model.path attribute before the method exits. This path will then be displayed on the map tile.
 
 void RoutePlanner::AStarSearch() {
-    //std::cout << "Reached AStarSearch()" << std::endl;
     RouteModel::Node *current_node = nullptr;
     open_list.push_back(start_node);
     current_node = start_node;
@@ -117,8 +109,6 @@ void RoutePlanner::AStarSearch() {
 
     // TODO: Implement your solution here.
     while(open_list.size() > 0) {
-        //std::cout << "In while loop" << std::endl;
-
         if(current_node == end_node) {
             break; 
         }
@@ -126,9 +116,8 @@ void RoutePlanner::AStarSearch() {
             AddNeighbors(current_node); 
             current_node = NextNode();
         }
-
     }
-    std::cout << "About to construct final path" << std::endl;
     m_Model.path = ConstructFinalPath(current_node); 
     std::cout << "Final path has been constructed!" << std::endl;
-    return;}
+    return;
+    }
